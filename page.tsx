@@ -13,23 +13,23 @@ export default function DashboardPage() {
   const [userName, setUserName] = useState('');
   const [balance, setBalance] = useState(5000);
   const [theme, setTheme] = useState('cyber'); 
-  const [activeStock, setActiveStock] = useState('RELIANCE');
+  const [activeStock, setActiveStock] = useState('ADITYA');
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showAcademy, setShowAcademy] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<{name: string, balance: number}[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [feedback, setFeedback] = useState<{isCorrect: boolean, msg: string} | null>(null);
-  const [factIndex, setFactIndex] = useState(0);
+  const [factIndex, setFactIndex] = useState(1);
   const [timeLeft, setTimeLeft] = useState("");
   const [canCollect, setCanCollect] = useState(false);
   const [news, setNews] = useState({ msg: "Market is stable.", impact: "neutral" });
 
   const [stocks, setStocks] = useState({
-    RELIANCE: { price: 150, history: Array(20).fill({ p: 150 }), shares: 0, color: "#00e676", name: "RELIANCE INDUSTRIES", volatility: 30 },
-    HDFC: { price: 800, history: Array(20).fill({ p: 800 }), shares: 0, color: "#2979ff", name: "HDFC BANK", volatility: 15 },
-    ITC: { price: 150,  history: Array(20).fill({ p: 150 }),  shares: 0, color: "#ff1744", name: "ITC Ltd", volatility: 60 },
-    GOLD: { price: 2000, history: Array(20).fill({ p: 2000 }), shares: 0, color: "#ffd700", name: "GOLD", volatility: 5 },
-    TITAN: { price: 500, history: Array(20).fill({ p: 500 }), shares: 0, color: "#f7931a", name: "TITAN COMPANY", volatility: 120 }
+    ADITYA: { price: 150, history: Array(20).fill({ p: 150 }), shares: 0, color: "#00e676", name: "ADITYA INDUSTRIES", volatility: 30 },
+    SANJAY: { price: 800, history: Array(20).fill({ p: 800 }), shares: 0, color: "#2979ff", name: "SANJAY BANK", volatility: 95 },
+    AKASH: { price: 150,  history: Array(20).fill({ p: 150 }),  shares: 0, color: "#ff1744", name: "AKASH Ltd", volatility: 60 },
+    KAVIN: { price: 2000, history: Array(20).fill({ p: 2000 }), shares: 0, color: "#ffd700", name: "KAVIN STOCKS", volatility: 220 },
+    HARI: { price: 500, history: Array(20).fill({ p: 500 }), shares: 0, color: "#f7931a", name: "HARI COMPANY", volatility: 120 }
   });
 
   const financeFacts = [
@@ -47,8 +47,8 @@ export default function DashboardPage() {
   ];
 
   const newsEvents = [
-    { msg: "TECH BOOM: RELIANCE INDUSTRIES SOARS!", target: "RELIANCE", impact: 0.3, type: "good" },
-    { msg: "CYBER ATTACK ON ITC Ltd!", target: "ITC", impact: -0.4, type: "bad" },
+    { msg: "TECH BOOM: ADITYA  INDUSTRIES SOARS!", target: "ADITYA", impact: 0.3, type: "good" },
+    { msg: "CYBER ATTACK ON AKASH Ltd!", target: "AKASH", impact: -0.4, type: "bad" },
     { msg: "MARKET CRASH: EVERYTHING DROPS!", target: "all", impact: -0.3, type: "bad" }
   ];
 
@@ -70,7 +70,7 @@ export default function DashboardPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!userName.trim()) return;
-    const saved = localStorage.getItem(`shark_user_₹{userName.toLowerCase()}`);
+    const saved = localStorage.getItem(`shark_user_${userName.toLowerCase()}`);
     if (saved) {
       const p = JSON.parse(saved);
       setBalance(p.balance);
@@ -83,7 +83,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isLoggedIn) {
       const data = { balance, theme, stocks: Object.fromEntries(Object.entries(stocks).map(([k, v]) => [k, { shares: v.shares }])) };
-      localStorage.setItem(`shark_user_₹{userName.toLowerCase()}`, JSON.stringify(data));
+      localStorage.setItem(`shark_user_${userName.toLowerCase()}`, JSON.stringify(data));
     }
   }, [balance, theme, stocks, isLoggedIn]);
 
@@ -176,8 +176,8 @@ export default function DashboardPage() {
             <h2 className="text-3xl font-mono font-black text-white tracking-tighter">₹{balance.toLocaleString()}</h2>
           </div>
           
-          <button onClick={() => { if(canCollect) { setBalance(b => b + 2500); localStorage.setItem(`bonus_₹{userName.toLowerCase()}`, Date.now().toString()); }}} 
-            className={`p-6 rounded-[32px] border transition-all flex justify-between items-center group ₹{canCollect ? 'bg-white text-black' : 'bg-white/5 border-white/10 opacity-50'}`}>
+          <button onClick={() => { if(canCollect) { setBalance(b => b + 2500); localStorage.setItem(`bonus_${userName.toLowerCase()}`, Date.now().toString()); }}} 
+            className={`p-6 rounded-[32px] border transition-all flex justify-between items-center group ${canCollect ? 'bg-white text-black' : 'bg-white/5 border-white/10 opacity-50'}`}>
             <div className="flex items-center gap-3">
               <Clock size={20} className={canCollect ? 'animate-spin' : ''}/>
               <div className="text-left">
@@ -198,7 +198,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 pb-10">
           <div className="space-y-2 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar">
             {Object.entries(stocks).map(([sym, data]) => (
-              <button key={sym} onClick={() => setActiveStock(sym)} className={`w-full p-4 rounded-2xl border transition-all ₹{activeStock === sym ? 'bg-white/10 border-white/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-60 hover:opacity-100'}`}>
+              <button key={sym} onClick={() => setActiveStock(sym)} className={`w-full p-4 rounded-2xl border transition-all ${activeStock === sym ? 'bg-white/10 border-white/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-60 hover:opacity-100'}`}>
                 <div className="flex justify-between font-black text-xs"><span>{sym}</span><span className="font-mono">₹{data.price}</span></div>
                 <div className="text-[9px] mt-2 text-left opacity-40 uppercase font-black">{data.shares} Units Held</div>
               </button>
@@ -212,7 +212,7 @@ export default function DashboardPage() {
                   <p className="text-5xl font-mono font-black text-white tracking-tighter">₹{stocks[activeStock as keyof typeof stocks].price}</p>
                 </div>
                 <div className="text-right">
-                  <div className={`text-[10px] font-black px-2 py-1 rounded-md mb-2 inline-block ₹{getRank(balance).color} bg-black/40 border border-white/5`}>
+                  <div className={`text-[10px] font-black px-2 py-1 rounded-md mb-2 inline-block ${getRank(balance).color} bg-black/40 border border-white/5`}>
                     {getRank(balance).title}
                   </div>
                 </div>
@@ -242,10 +242,10 @@ export default function DashboardPage() {
               <div className="flex justify-between items-center mb-8"><span className="text-yellow-500 font-black italic uppercase text-sm tracking-widest">Global Rankings</span><button onClick={() => setShowLeaderboard(false)} className="p-2 bg-white/5 rounded-full hover:bg-white/10"><X size={18}/></button></div>
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                 {leaderboardData.map((user, i) => (
-                  <div key={user.name} className={`flex justify-between p-4 rounded-2xl border ₹{user.name === userName.toUpperCase() ? 'bg-blue-500/10 border-blue-500' : 'bg-white/5 border-white/5'}`}>
+                  <div key={user.name} className={`flex justify-between p-4 rounded-2xl border ${user.name === userName.toUpperCase() ? 'bg-blue-500/10 border-blue-500' : 'bg-white/5 border-white/5'}`}>
                     <div className="flex flex-col">
                       <span className="text-white font-black text-sm">{i+1}. {user.name}</span>
-                      <span className={`text-[8px] font-black ₹{getRank(user.balance).color} tracking-tighter`}>{getRank(user.balance).title}</span>
+                      <span className={`text-[8px] font-black ${getRank(user.balance).color} tracking-tighter`}>{getRank(user.balance).title}</span>
                     </div>
                     <span className="font-mono text-emerald-400 font-bold self-center">₹{user.balance.toLocaleString()}</span>
                   </div>
@@ -270,14 +270,14 @@ export default function DashboardPage() {
                         if (opt === academyQuestions[currentQ].a) { 
                           setFeedback({isCorrect: true, msg: "Capital Gained! Knowledge is power."}); 
                           setTimeout(() => { if (currentQ < 2) { setCurrentQ(currentQ+1); setFeedback(null); } else { setBalance(b => b + 5000); setShowAcademy(false); setCurrentQ(0); setFeedback(null); }}, 1500); 
-                        } else { setFeedback({isCorrect: false, msg: `Incorrect. ₹{academyQuestions[currentQ].explain}`}); }
+                        } else { setFeedback({isCorrect: false, msg: `Incorrect. ${academyQuestions[currentQ].explain}`}); }
                       }} className="w-full p-5 rounded-2xl bg-white/5 border border-white/5 text-left font-bold hover:bg-white/10 transition-colors">{opt}</button>
                     ))}
                   </div>
                 </>
               ) : (
                 <div className="text-center py-6">
-                  <h3 className={`text-3xl font-black mb-4 ₹{feedback.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>{feedback.isCorrect ? "MISSION SUCCESS" : "MISSION FAILED"}</h3>
+                  <h3 className={`text-3xl font-black mb-4 ${feedback.isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>{feedback.isCorrect ? "MISSION SUCCESS" : "MISSION FAILED"}</h3>
                   <p className="text-slate-400 text-sm mb-10 font-bold">{feedback.msg}</p>
                   {!feedback.isCorrect && <button onClick={() => setFeedback(null)} className="bg-white text-black px-12 py-4 rounded-2xl font-black uppercase hover:scale-105 transition-transform">Re-Attempt</button>}
                 </div>
